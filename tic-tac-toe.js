@@ -1,5 +1,11 @@
-document.addEventListener("DOMContentLoaded", function(){
-    let boardSquares = document.querySelectorAll("div").className = "board";
+document.addEventListener("DOMContentLoaded", function () {
+    let boardSquares = document.getElementById("board").querySelectorAll('div');
 
-    boardSquares.classList.add("square");
+    var count;
+
+    for (count = 0; count < boardSquares.length; count++) {
+        boardSquares[count].setAttribute("class", "square");
+    }
+
+    let state = [];
 });
