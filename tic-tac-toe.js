@@ -19,23 +19,37 @@ document.addEventListener("DOMContentLoaded", function () {
     function clickFunction(e) {
         console.log("Clicked thing")
         const cell = e.target;
-        let currentClass = xTurn ? x_Class : o_Class
-        
+        let currentClass = xTurn == true ? x_Class : o_Class
+
         placeMark(cell, currentClass)
 
+        gameState.push(cell)
+        console.log(cell)
+        
         xTurn = !xTurn;
+
     }
 
     function placeMark(cell, currentClass) {
-        if(currentClass = x_Class) {
-            cell.classList.add("square.X");
+        if (currentClass == x_Class) {
+            cell.classList.add("X");
             cell.innerHTML = "X";
         }
 
-        else if(currentClass = o_Class) {
+        else if (currentClass == o_Class) {
             cell.innerHTML = "O";
-            cell.classList.add("square.O");
+            cell.classList.add("O");
         }
     }
+
+    boardSquares.forEach(function (cell, index) {
+        cell.addEventListener('mouseover', function (e) {
+            e.target.classList.add('hover');
+        });
+
+        cell.addEventListener('mouseout', function(e) {
+            e.target.classList.remove('hover');
+          });
+    });
 
 });
