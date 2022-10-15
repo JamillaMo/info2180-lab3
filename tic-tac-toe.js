@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     let count;
+    let win;
     let xGameState = [];
     let oGameState = [];
     let winCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -16,21 +17,22 @@ document.addEventListener("DOMContentLoaded", function () {
         cell.addEventListener('click', clickFunction, { once: true })
     })
 
+    
+    function getElementIndex(e) {
+        var index = 0;
+        while ((e = e.previousElementSibling)) {
+            index++;
+        }
+        return index;
+    }
+
     function clickFunction(e) {
         const cell = e.target;
         let currentClass = xTurn ? x_Class : o_Class
 
         placeMark(cell, currentClass)
 
-        function getElementIndex(e) {
-            var index = 0;
-            while ((e = e.previousElementSibling)) {
-                index++;
-            }
-            return index;
-        }
-
-        getElementIndex(cell);
+        // getElementIndex(cell);
 
         if (xTurn == true) {
             xGameState.push(getElementIndex(cell));
@@ -71,7 +73,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function checkForWin() {
         //If the elements in xGameState are in one of the win combinations
         for (count = 0; count < winCombinations.length; count++) {
-            let win;
             //console.log("winner");
             //console.log(winCombinations[count].every(checkIfIn));
             win = winCombinations[count].every(checkIfIn);
@@ -79,6 +80,12 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(xTurn);
 
             if (win == true) /*and the textContent == "XXX" or "OOO" */ {
+                // for(i = 0; i < winCombinations[count].length; i++) {
+                //     console.log(i);
+                //     console.log(winCombinations[count] + " " + "Hi");
+                //     console.log(winCombinations[count][i] + " " + "Hi 3");
+                //     console.log(winCombinations[count][i].textContent + " " + "Hi 2");
+                // }
                 boardSquares.forEach(function (cell, index) {
                     cell.removeEventListener('click', clickFunction, { once: true })
 
@@ -89,17 +96,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 document.getElementById("status").setAttribute("class", "you-won");
                 console.log("winner");
-                console.log(boardSquares.forEach(function(cell) {
+                console.log(boardSquares.forEach(function (cell) {
                     cell.textContent;
                 }));
-                
+
                 //If all spaces are filled and there are no winners, there is a draw.
 
-                if(xTurn == true) {
+                if (xTurn == true) {
                     document.getElementById("status").textContent = "Congratulations! X is the winner!";
                 }
-                
-                else if(xTurn == false) {
+
+                else if (xTurn == false) {
                     document.getElementById("status").textContent = "Congratulations! O is the winner!";
                 }
             }
@@ -123,6 +130,42 @@ document.addEventListener("DOMContentLoaded", function () {
             //console.log(x);
             return x in oGameState;
         }
+    }
+
+    resetBtn = document.getElementsByClassName("btn")[0]
+    resetBtn.addEventListener("click", resetGame);
+
+    function resetGame() {
+        let gameStatus;
+
+        console.log("Clicked");
+        gameStatus = document.getElementById("status");
+        gameStatus.textContent = "Move your mouse over a square and click to play an X or an O.";
+        gameStatus.removeAttribute("class", "you-won");
+
+        function removeMark(cell) {
+            cell.innerHTML = "";
+        }
+
+        for (count = 0; count < boardSquares.length; count++) {
+            removeMark(boardSquares[count]);
+        }
+
+        boardSquares.forEach(function (cell, index) {
+            cell.addEventListener('mouseover', function (e) {
+                e.target.classList.add('hover');
+            });
+    
+            cell.addEventListener('mouseout', function (e) {
+                e.target.classList.remove('hover');
+            });
+        });
+
+        boardSquares.forEach(cell => {
+            cell.addEventListener('click', clickFunction, { once: true })
+        })
+
+
     }
 
 });
